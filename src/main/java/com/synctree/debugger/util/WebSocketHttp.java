@@ -98,7 +98,7 @@ public class WebSocketHttp extends TextWebSocketHandler {
         System.out.println("[Client Disconnected] ::: "+ session.getRemoteAddress().toString());
     }
     
-    public boolean sendMessageToOne(DebuggerVo debuggerVo) {
+    public boolean sendMessageToOne(final DebuggerVo debuggerVo) {
         if (sessions == null) {
             return false;
         }

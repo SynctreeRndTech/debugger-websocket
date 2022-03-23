@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 
 @Component
-@ServerEndpoint("/api/socket")
+@ServerEndpoint("/api/websocket")
 public class WebSocketWs {
 
 	
