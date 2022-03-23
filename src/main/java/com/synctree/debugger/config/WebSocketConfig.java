@@ -21,7 +21,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
                 //.setAllowedOrigins("*")
         		.setAllowedOriginPatterns("*")
                 .withSockJS(); //sockjs 지원
-        registry.addHandler(webSocketHandler, "/api/websocket")
+        registry.addHandler(webSocketHandler, "/api/websock")
         		.setAllowedOrigins("*"); // websocket 지원
     }
 
