@@ -23,8 +23,8 @@ public class WebSocketHttpHandler extends TextWebSocketHandler {
 
 	//private static Set<WebSocketSession> sessions = new ConcurrentHashMap().newKeySet();
 	private static HashMap<String, WebSocketSession> sessions = new HashMap<String, WebSocketSession>();
-	private static RedisHandler redisHandler;
-	private String lockKey = "";
+	//private static RedisHandler redisHandler;
+	private static HashMap<String, String> lockKeyMap = new HashMap<String, String>();
 	
 	@Autowired
 	private StringRedisTemplate stringRedisTemplate = new StringRedisTemplate();
@@ -39,8 +39,8 @@ public class WebSocketHttpHandler extends TextWebSocketHandler {
         System.out.println("[Client HandshakeHeaders] ::: "+ session.getHandshakeHeaders().toString());
         
         session.sendMessage(new TextMessage("{\r\n"
-        		+ "    \"msg_type\" : \"send_session_id\",\r\n"
-        		+ "    \"msg_data\" : {\r\n"
+        		+ "    \"msg_type\" : \"text\",\r\n"
+        		+ "    \"msg_data\" : {\"send_session_id\"\r\n"
         		+ "    \"session_id\" :\"" + session.getId() + "\" }\r\n"
         	    + "}"));
     }
@@ -49,28 +49,24 @@ public class WebSocketHttpHandler extends TextWebSocketHandler {
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
     	System.out.println("[Client Message Handled] ::: "+ session.getRemoteAddress().toString()+ ", " + message.getPayload().toString());
     	
-    	String tmp = message.getPayload();
-    	String parseRslt = tmp.substring(1, tmp.length()-1);
+    	String payload = message.getPayload();
+    	String payloadSplit[] = payload.split(",");
+    	String sessionId = payloadSplit[1];
+    	System.out.println("sessionId 찍어보기==============>" + sessionId);
+    	System.out.println("lockKey 가져온거 찍어보기==============>" + lockKeyMap.get(sessionId));
     	
-    	if(parseRslt.equals("request_for_unlock")){
-    		boolean result = unlockRedisSpinLock(lockKey, "0");
+    	if(payloadSplit[0].equals("request_for_unlock")){
+    		boolean result = unlockRedisSpinLock(lockKeyMap.get(sessionId), "0");
     		session.sendMessage(new TextMessage("{\r\n"
              		+ "    \"msg_type\" : \"unlock_result\",\r\n"
              		+ "    \"msg_data\" : {\r\n"
              		+ "    \"result\" : " + result + "}\r\n"
              	    + "}"));
-    	} else if (message.getPayload().equals("GET_SESSION_ID")){
+    	} else if (payloadSplit[0].equals("GET_SESSION_ID")){
     		session.sendMessage(new TextMessage("{\r\n"
              		+ "    \"msg_type\" : \"session_id\",\r\n"
              		+ "    \"msg_data\" : {\r\n"
              		+ "    \"result\" : " + session.getId() + "}\r\n"
-             	    + "}"));
-    	} else if(message.getPayload().equals("request_for_unlock")){
-    		boolean result = unlockRedisSpinLock(lockKey, "0");
-    		session.sendMessage(new TextMessage("{\r\n"
-             		+ "    \"msg_type\" : \"unlock_result\",\r\n"
-             		+ "    \"msg_data\" : {\r\n"
-             		+ "    \"result\" : " + result + "}\r\n"
              	    + "}"));
     	} else {
             session.sendMessage(new TextMessage("{\r\n"
@@ -103,9 +99,9 @@ public class WebSocketHttpHandler extends TextWebSocketHandler {
         }
         
         WebSocketSession singleSession = sessions.get(debuggerVo.getSessionId());
-
-        lockKey = debuggerVo.getLockKey();
-        
+        System.out.println("map에 lock key 셋팅하는거 찍어보기==============>");
+        lockKeyMap.put(debuggerVo.getSessionId(), debuggerVo.getLockKey());
+        System.out.println("map에 lock key 셋팅 결과 찍어보기==============>" + lockKeyMap.toString());
         String message = debuggerVo.getExtraId();
         
         try {
