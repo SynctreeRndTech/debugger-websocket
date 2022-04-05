@@ -13,7 +13,7 @@ import com.synctree.debugger.vo.DebuggerVo;
 import lombok.RequiredArgsConstructor;
 
 import com.synctree.debugger.handler.RedisHandler;
-import com.synctree.debugger.util.WebSocketHttp;
+import com.synctree.debugger.handler.WebSocketHttpHandler;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,7 +21,7 @@ public class SynctreeDebuggerController {
 	
 	//private static EscapeUnescape escapeUtil;
 	//private static WebSocketWs webSockWs;
-	private final WebSocketHttp websock;
+	private final WebSocketHttpHandler websock;
 	private final RedisHandler redisHandler;
 	
 	@Autowired

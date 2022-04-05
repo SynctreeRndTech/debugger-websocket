@@ -1,4 +1,4 @@
-package com.synctree.debugger.util;
+package com.synctree.debugger.handler;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -12,7 +12,6 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import com.synctree.debugger.handler.RedisHandler;
 import com.synctree.debugger.vo.DebuggerVo;
 
 import lombok.RequiredArgsConstructor;
@@ -20,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-public class WebSocketHttp extends TextWebSocketHandler {
+public class WebSocketHttpHandler extends TextWebSocketHandler {
 
 	//private static Set<WebSocketSession> sessions = new ConcurrentHashMap().newKeySet();
 	private static HashMap<String, WebSocketSession> sessions = new HashMap<String, WebSocketSession>();
