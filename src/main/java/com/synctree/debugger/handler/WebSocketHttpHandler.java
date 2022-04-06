@@ -24,7 +24,7 @@ public class WebSocketHttpHandler extends TextWebSocketHandler {
 	//private static Set<WebSocketSession> sessions = new ConcurrentHashMap().newKeySet();
 	private static HashMap<String, WebSocketSession> sessions = new HashMap<String, WebSocketSession>();
 	//private static RedisHandler redisHandler;
-	private static HashMap<String, String> lockKeyMap = new HashMap<String, String>();
+	private HashMap<String, String> lockKeyMap = new HashMap<String, String>();
 	
 	@Autowired
 	private StringRedisTemplate stringRedisTemplate = new StringRedisTemplate();
@@ -33,10 +33,10 @@ public class WebSocketHttpHandler extends TextWebSocketHandler {
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         super.afterConnectionEstablished(session);
         sessions.put(session.getId(), session);
-        System.out.println("[Currently Connected Session List] ::: " + sessions.keySet().toString());
-        System.out.println("[Client Connected] ::: "+ session.getRemoteAddress().toString());
-        System.out.println("[Client SessionID] ::: "+session.getId());
-        System.out.println("[Client HandshakeHeaders] ::: "+ session.getHandshakeHeaders().toString());
+        System.out.println("::: [Currently Connected Session List] ::: " + sessions.keySet().toString());
+        System.out.println("::: [Client Connected] ::: "+ session.getRemoteAddress().toString());
+        System.out.println("::: [Client SessionID] ::: "+session.getId());
+        System.out.println("::: [Client HandshakeHeaders] ::: "+ session.getHandshakeHeaders().toString());
         
         session.sendMessage(new TextMessage("{\r\n"
         		+ "    \"msg_type\" : \"text\",\r\n"
@@ -52,8 +52,8 @@ public class WebSocketHttpHandler extends TextWebSocketHandler {
     	String payload = message.getPayload();
     	String payloadSplit[] = payload.split(",");
     	String sessionId = payloadSplit[1];
-    	System.out.println("sessionId 찍어보기==============>" + sessionId);
-    	System.out.println("lockKey 가져온거 찍어보기==============>" + lockKeyMap.get(sessionId));
+    	//System.out.println("sessionId 찍어보기==============>" + sessionId);
+    	//System.out.println("lockKey 가져온거 찍어보기==============>" + lockKeyMap.get(sessionId));
     	
     	if(payloadSplit[0].equals("request_for_unlock")){
     		boolean result = unlockRedisSpinLock(lockKeyMap.get(sessionId), "0");
@@ -88,9 +88,8 @@ public class WebSocketHttpHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         super.afterConnectionClosed(session, status);
+        System.out.println("::: [Client ::: "+ session.getRemoteAddress().toString() + ", SessionID ::: " + session.getId() + " ::: Disconnected]");
         sessions.remove(session.getId());
-
-        System.out.println("[Client Disconnected] ::: "+ session.getRemoteAddress().toString());
     }
     
     public boolean sendMessageToOne(DebuggerVo debuggerVo) {
@@ -99,9 +98,8 @@ public class WebSocketHttpHandler extends TextWebSocketHandler {
         }
         
         WebSocketSession singleSession = sessions.get(debuggerVo.getSessionId());
-        System.out.println("map에 lock key 셋팅하는거 찍어보기==============>");
         lockKeyMap.put(debuggerVo.getSessionId(), debuggerVo.getLockKey());
-        System.out.println("map에 lock key 셋팅 결과 찍어보기==============>" + lockKeyMap.toString());
+        //System.out.println("map에 lock key 셋팅 결과 찍어보기==============>" + lockKeyMap.toString());
         String message = debuggerVo.getExtraId();
         
         try {
@@ -127,7 +125,7 @@ public class WebSocketHttpHandler extends TextWebSocketHandler {
     	//return redisHandler.setRedisStringValue(lockKey, "0");
     	ValueOperations<String, String> stringValueOperations = stringRedisTemplate.opsForValue();
 		stringValueOperations.set(key, value);
-		System.out.println("Redis Set : key '" + key + "', " + "value : " + stringValueOperations.get(key));
+		//System.out.println("Redis Set : key '" + key + "', " + "value : " + stringValueOperations.get(key));
 		if(stringValueOperations.get(key).equals(value)) {
 			return true;
 		}
