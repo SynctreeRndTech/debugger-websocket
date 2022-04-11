@@ -19,8 +19,8 @@ import com.synctree.debugger.handler.WebSocketHttpHandler;
 @RequiredArgsConstructor
 public class SynctreeDebuggerController {
 	
-	//private static EscapeUnescape escapeUtil;
-	//private static WebSocketWs webSockWs;
+	//private static EscapeUnescapeUtil escapeUtil;
+	//private static WebSocketWsHandler webSockWs;
 	private final WebSocketHttpHandler websock;
 	private final RedisHandler redisHandler;
 	
@@ -30,7 +30,7 @@ public class SynctreeDebuggerController {
 	@PostMapping(value="/debugger-test", produces="applicaion/json;charset=UTF-8")
 	public void debuggerTest(@RequestBody DebuggerVo debuggerVo) throws Exception {
 		
-		//System.out.println("==========debuggerTest called==========");
+		//System.out.println("====================debugger controller called====================");
 		//String extraId = escapeUtil.unescape(debuggerVo.getExtraId().toString());
 		
 		System.out.println("::: SpinkLockKey ::: "+ debuggerVo.getLockKey());
@@ -44,13 +44,13 @@ public class SynctreeDebuggerController {
 				websock.sendMessageToOne(debuggerVo);
 				//webSockWs.sendMessageToAll(debuggerVo.getExtraId(), debuggerVo.getSessionId());
 			} else {
-				//TO-BE: getRedisStringValue로 값 확인
+				//TO-DO: getRedisStringValue로 값 확인
 			}
 		} else {
-			//TO-BE: 인자값 Null 체크 및 에러 처리
+			//TO-DO: 인자값 Null 체크 및 에러 처리
 		}
 	
-		//System.out.println("++++++++++debuggerTest process finished++++++++++");
+		//System.out.println("====================debugger controller finished====================");
 	}
 	
 	@GetMapping(value="/test")

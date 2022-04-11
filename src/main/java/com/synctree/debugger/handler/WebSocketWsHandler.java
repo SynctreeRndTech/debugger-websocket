@@ -1,8 +1,6 @@
 package com.synctree.debugger.handler;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
@@ -13,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 
 @Component
-@ServerEndpoint("/api/socket")
+@ServerEndpoint("/api/websock")
 public class WebSocketWsHandler {
 
 	
