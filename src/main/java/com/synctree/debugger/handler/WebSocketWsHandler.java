@@ -1,4 +1,4 @@
-package com.synctree.debugger.util;
+package com.synctree.debugger.handler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @ServerEndpoint("/api/socket")
-public class WebSocketWs {
+public class WebSocketWsHandler {
 
 	
     /**
