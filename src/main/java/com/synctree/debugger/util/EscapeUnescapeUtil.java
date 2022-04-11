@@ -1,6 +1,7 @@
 package com.synctree.debugger.util;
 
-public class EscapeUnescape
+/*현재 미사용*/
+public class EscapeUnescapeUtil
 
 {  
 
