@@ -1,4 +1,4 @@
-package com.synctree.debugger.util;
+package com.synctree.debugger.util.escape;
 
 /*현재 미사용*/
 public class EscapeUnescapeUtil

@@ -4,13 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
+import com.synctree.debugger.util.logging.DebuggerLogger;
 
 import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
 public class RedisHandler {
+	
+	private static final DebuggerLogger logger = new DebuggerLogger(RedisHandler.class.getName());
 	
 	@Autowired
 	private StringRedisTemplate stringRedisTemplate = new StringRedisTemplate();
@@ -23,7 +25,7 @@ public class RedisHandler {
 	public boolean setRedisStringValue(String key, String value) {
 		ValueOperations<String, String> stringValueOperations = stringRedisTemplate.opsForValue();
 		stringValueOperations.set(key, value);
-		System.out.println("Redis Set : key '" + key + "', " + "value : " + stringValueOperations.get(key));
+		logger.info("Redis Set : key '" + key + "', " + "value : " + stringValueOperations.get(key));
 		if(stringValueOperations.get(key).equals(value)) {
 			return true;
 		}

@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 
 import com.synctree.debugger.handler.RedisHandler;
 import com.synctree.debugger.handler.WebSocketHttpHandler;
+import com.synctree.debugger.util.logging.DebuggerLogger;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,6 +23,7 @@ public class SynctreeDebuggerController {
 	
 	//private static EscapeUnescapeUtil escapeUtil;
 	//private static WebSocketWsHandler webSockWs;
+	private static final DebuggerLogger logger = new DebuggerLogger(SynctreeDebuggerController.class.getName());
 	private final WebSocketHttpHandler websock;
 	private final RedisHandler redisHandler;
 	
@@ -31,12 +33,12 @@ public class SynctreeDebuggerController {
 	@PostMapping(value="/debugger-test", produces="applicaion/json;charset=UTF-8")
 	public void debuggerTest(@RequestBody DebuggerVo debuggerVo) throws Exception {
 		
-		//System.out.println("====================debugger controller called====================");
+		//logger.info("====================debugger controller called====================");
 		//String extraId = escapeUtil.unescape(debuggerVo.getExtraId().toString());
 		
-		System.out.println("::: SpinkLockKey ::: "+ debuggerVo.getLockKey());
-		System.out.println("::: ExtraID ::: "+ debuggerVo.getExtraId());
-		System.out.println("::: SessionID ::: "+ debuggerVo.getSessionId());
+		logger.info("::: SpinkLockKey ::: "+ debuggerVo.getLockKey());
+		logger.info("::: ExtraID ::: "+ debuggerVo.getExtraId());
+		logger.info("::: SessionID ::: "+ debuggerVo.getSessionId());
 		
 		if(debuggerVo.getLockKey() != null && debuggerVo.getExtraId() != null && debuggerVo.getSessionId() != null) {
 			boolean result = redisHandler.setRedisStringValue(debuggerVo.getLockKey(), "1"); //스핀락 잠금
@@ -51,7 +53,7 @@ public class SynctreeDebuggerController {
 			//TO-DO: 인자값 Null 체크 및 에러 처리
 		}
 	
-		//System.out.println("====================debugger controller finished====================");
+		//logger.info("====================debugger controller finished====================");
 	}
 	
 	@GetMapping(value="/test")
@@ -64,7 +66,7 @@ public class SynctreeDebuggerController {
 	public boolean setRedisStringValue(String key, String value) {
 		ValueOperations<String, String> stringValueOperations = stringRedisTemplate.opsForValue();
 		stringValueOperations.set(key, value);
-		//System.out.println("Redis Set : key '" + key + "', " + "value : " + stringValueOperations.get(key));
+		//logger.info("Redis Set : key '" + key + "', " + "value : " + stringValueOperations.get(key));
 		if(stringValueOperations.get(key).equals(value)) {
 			return true;
 		}
