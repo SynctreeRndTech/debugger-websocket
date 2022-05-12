@@ -35,7 +35,7 @@ public class WebSocketHttpHandler extends TextWebSocketHandler {
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         super.afterConnectionEstablished(session);
         sessions.put(session.getId(), session);
-        logger.info("[connection established] / new_session_id: "+session.getId() + ", session_list: " + sessions.keySet().toString());
+        logger.info("[new connection established] / session_id: "+session.getId() + ", session_list: " + sessions.keySet().toString());
         //logger.info("::: connected client ::: "+ session.getRemoteAddress().toString());
         //logger.info("::: handshake headers ::: "+ session.getHandshakeHeaders().toString());
         
@@ -98,7 +98,7 @@ public class WebSocketHttpHandler extends TextWebSocketHandler {
     
     public boolean sendMessageToSession(DebuggerVo debuggerVo) throws Exception {
         if (sessions == null) {
-        	logger.info("[send_message_to_session failed] / sessions_list is null");
+        	logger.info("[send_message_to_session failed] / session_id: " + debuggerVo.getSessionId() + ", message: sessionList is null");
             return false; //To-Do: 에러 처리
         }
         
@@ -113,16 +113,17 @@ public class WebSocketHttpHandler extends TextWebSocketHandler {
 	            singleSession.sendMessage(new TextMessage(message));
 	
 	        } else {
-	        	logger.info("[send_message_to_session failed]: single_session is null");
+	        	logger.info("[send_message_to_session failed] / session_id: " + debuggerVo.getSessionId() + ", message: single_session is null");
 	        	return false;
 	        }
 		} catch (IOException e) {
-			logger.error("[exception_message] / " + e.getMessage());
-			logger.error("[exception_cause] / " + e.getCause());
+			logger.error("[IOException] / session_id:" + debuggerVo.getSessionId() + ", message: " + e.getMessage());
+			logger.error("[IOException] / session_id:" + debuggerVo.getSessionId() + ", cause: " + e.getCause());
 		} catch (Exception e) {
-			logger.error("[exception_message] / " + e.getMessage());
-			logger.error("[exception_cause] / " + e.getCause());
+			logger.error("[Exception] / session_id:" + debuggerVo.getSessionId() + ", message: " + e.getMessage());
+			logger.error("[Exception] / session_id:" + debuggerVo.getSessionId() + ", cause: " + e.getCause());
 		}
+        
         return true;
     }
 }

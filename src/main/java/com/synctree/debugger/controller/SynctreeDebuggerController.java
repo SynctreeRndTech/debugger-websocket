@@ -3,7 +3,6 @@ package com.synctree.debugger.controller;
 import java.io.IOException;
 
 import org.json.JSONObject;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,7 +25,7 @@ public class SynctreeDebuggerController {
 	@PostMapping(value="/debugger-websock", produces="application/json;charset=UTF-8")
 	public void debuggerController(@RequestBody DebuggerVo debuggerVo) throws Exception {
 
-		logger.info("[debugger websocket called] / spin_lock_key: "+ debuggerVo.getLockKey() + ", extra_id: " + debuggerVo.getExtraId() + ", session_id: " + debuggerVo.getSessionId());
+		logger.info("[debugger websocket called] / session_id: " + debuggerVo.getSessionId() + ", spin_lock_key: "+ debuggerVo.getLockKey() + ", extra_id: " + debuggerVo.getExtraId());
 		
 		if(debuggerVo.getLockKey() != null && debuggerVo.getExtraId() != null && debuggerVo.getSessionId() != null) {
 			try {
@@ -45,27 +44,27 @@ public class SynctreeDebuggerController {
 					jsonObj.put("result_msg", "lock_failed");
 				}
 			} catch (NullPointerException e) {
-				logger.error("[exception_message] / " + e.getMessage());
-				logger.error("[exception_cause] / " + e.getCause());
+				logger.error("[NullPointerException] / session_id:" + debuggerVo.getSessionId() + ", message: " + e.getMessage());
+				logger.error("[NullPointerException] / session_id:" + debuggerVo.getSessionId() + ", cause: " + e.getCause());
 			} catch (IOException e) {
-				logger.error("[exception_message] / " + e.getMessage());
-				logger.error("[exception_cause] / " + e.getCause());
+				logger.error("[IOException] / session_id:" + debuggerVo.getSessionId() + ", message: " + e.getMessage());
+				logger.error("[IOException] / session_id:" + debuggerVo.getSessionId() + ", cause: " + e.getCause());
 			} catch (Exception e) {
-				logger.error("[exception_message] / " + e.getMessage());
-				logger.error("[exception_cause] / " + e.getCause());
+				logger.error("[Exception] / session_id:" + debuggerVo.getSessionId() + ", message: " + e.getMessage());
+				logger.error("[Exception] / session_id:" + debuggerVo.getSessionId() + ", cause: " + e.getCause());
 				//e.printStackTrace(); //CWE-497
 			}
 		} else {
-			logger.info("[null check] / lock_key: " +debuggerVo.getLockKey() + ", extra_id: " + debuggerVo.getExtraId() + ", session_id: " + debuggerVo.getSessionId());
+			logger.info("[null check] / session_id: " + debuggerVo.getSessionId() + ", lock_key: " +debuggerVo.getLockKey() + ", extra_id: " + debuggerVo.getExtraId());
 			jsonObj.put("result", false);
 			jsonObj.put("result_msg", "get_params_failed");
 		}
 		//return jsonObj;
 	}
 	
-	@GetMapping(value="/echo")
-	public String serverEchoTest() throws Exception {
+	@PostMapping(value="/echo")
+	public String serverEchoTest(String echoMsg) throws Exception {
 		
-		return "echo ";
+		return "echo " + echoMsg;
 	}
 }
