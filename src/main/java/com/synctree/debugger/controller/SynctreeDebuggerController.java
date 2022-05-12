@@ -1,76 +1,71 @@
 package com.synctree.debugger.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.stereotype.Component;
+import java.io.IOException;
+
+import org.json.JSONObject;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.synctree.debugger.vo.DebuggerVo;
-
+import logger.DebuggerLogger;
 import lombok.RequiredArgsConstructor;
-
-import com.synctree.debugger.handler.RedisHandler;
 import com.synctree.debugger.handler.WebSocketHttpHandler;
-import com.synctree.debugger.util.logging.DebuggerLogger;
+import com.synctree.debugger.util.redis.RedisUtil;
 
 @RestController
 @RequiredArgsConstructor
 public class SynctreeDebuggerController {
 	
-	//private static EscapeUnescapeUtil escapeUtil;
-	//private static WebSocketWsHandler webSockWs;
 	private static final DebuggerLogger logger = new DebuggerLogger(SynctreeDebuggerController.class.getName());
-	private final WebSocketHttpHandler websock;
-	private final RedisHandler redisHandler;
 	
-	@Autowired
-	private static StringRedisTemplate stringRedisTemplate;
+	private final WebSocketHttpHandler websock;
+	private final RedisUtil redisUtil;
+	private JSONObject jsonObj = new JSONObject();
 
-	@PostMapping(value="/debugger-test", produces="applicaion/json;charset=UTF-8")
-	public void debuggerTest(@RequestBody DebuggerVo debuggerVo) throws Exception {
-		
-		//logger.info("====================debugger controller called====================");
-		//String extraId = escapeUtil.unescape(debuggerVo.getExtraId().toString());
-		
-		logger.info("::: SpinkLockKey ::: "+ debuggerVo.getLockKey());
-		logger.info("::: ExtraID ::: "+ debuggerVo.getExtraId());
-		logger.info("::: SessionID ::: "+ debuggerVo.getSessionId());
+	@PostMapping(value="/debugger-websock", produces="application/json;charset=UTF-8")
+	public void debuggerController(@RequestBody DebuggerVo debuggerVo) throws Exception {
+
+		logger.info("[debugger websocket called] / spin_lock_key: "+ debuggerVo.getLockKey() + ", extra_id: " + debuggerVo.getExtraId() + ", session_id: " + debuggerVo.getSessionId());
 		
 		if(debuggerVo.getLockKey() != null && debuggerVo.getExtraId() != null && debuggerVo.getSessionId() != null) {
-			boolean result = redisHandler.setRedisStringValue(debuggerVo.getLockKey(), "1"); //스핀락 잠금
-			
-			if(result == true) {
-				websock.sendMessageToOne(debuggerVo);
-				//webSockWs.sendMessageToAll(debuggerVo.getExtraId(), debuggerVo.getSessionId());
-			} else {
-				//TO-DO: getRedisStringValue로 값 확인
+			try {
+				boolean lockResult = redisUtil.setRedisStringValue(debuggerVo.getLockKey(), "1"); //Lock spin lock (unlock:"0", lock:"1")
+				if (lockResult == true) {
+					boolean sendResult = websock.sendMessageToSession(debuggerVo);
+					if (sendResult == true) {
+						jsonObj.put("result", true);
+						jsonObj.put("result_msg", "delivery_succeed");
+					} else {
+						jsonObj.put("result", false);
+						jsonObj.put("result_msg", "delivery_failed");
+					}
+				} else {
+					jsonObj.put("result", false);
+					jsonObj.put("result_msg", "lock_failed");
+				}
+			} catch (NullPointerException e) {
+				logger.error("[exception_message] / " + e.getMessage());
+				logger.error("[exception_cause] / " + e.getCause());
+			} catch (IOException e) {
+				logger.error("[exception_message] / " + e.getMessage());
+				logger.error("[exception_cause] / " + e.getCause());
+			} catch (Exception e) {
+				logger.error("[exception_message] / " + e.getMessage());
+				logger.error("[exception_cause] / " + e.getCause());
+				//e.printStackTrace(); //CWE-497
 			}
 		} else {
-			//TO-DO: 인자값 Null 체크 및 에러 처리
+			logger.info("[null check] / lock_key: " +debuggerVo.getLockKey() + ", extra_id: " + debuggerVo.getExtraId() + ", session_id: " + debuggerVo.getSessionId());
+			jsonObj.put("result", false);
+			jsonObj.put("result_msg", "get_params_failed");
 		}
-	
-		//logger.info("====================debugger controller finished====================");
+		//return jsonObj;
 	}
 	
-	@GetMapping(value="/test")
-	public String serverTest() throws Exception {
+	@GetMapping(value="/echo")
+	public String serverEchoTest() throws Exception {
 		
-		return "Hello";
+		return "echo ";
 	}
-	
-	
-	public boolean setRedisStringValue(String key, String value) {
-		ValueOperations<String, String> stringValueOperations = stringRedisTemplate.opsForValue();
-		stringValueOperations.set(key, value);
-		//logger.info("Redis Set : key '" + key + "', " + "value : " + stringValueOperations.get(key));
-		if(stringValueOperations.get(key).equals(value)) {
-			return true;
-		}
-		return false;
-	}
-	
 }

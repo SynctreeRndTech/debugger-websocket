@@ -1,4 +1,4 @@
-package com.synctree.debugger.util.logging;
+package logger;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
