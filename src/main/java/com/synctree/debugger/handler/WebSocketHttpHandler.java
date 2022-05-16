@@ -26,7 +26,6 @@ public class WebSocketHttpHandler extends TextWebSocketHandler {
 	//private static Set<WebSocketSession> sessions = new ConcurrentHashMap().newKeySet();
 	private static HashMap<String, WebSocketSession> sessions = new HashMap<String, WebSocketSession>();
 	private HashMap<String, String> lockKeyMap = new HashMap<String, String>();
-	private JSONObject jsonObj = new JSONObject();
 	
 	//private final StringRedisTemplate stringRedisTemplate;
 	private final RedisUtil redisUtil;
@@ -39,9 +38,10 @@ public class WebSocketHttpHandler extends TextWebSocketHandler {
         //logger.info("::: connected client ::: "+ session.getRemoteAddress().toString());
         //logger.info("::: handshake headers ::: "+ session.getHandshakeHeaders().toString());
         
+    	JSONObject jsonObj = new JSONObject();
         jsonObj.put("msg_type", "text");
-        jsonObj.put("msg_data", "send_session_id");
-        jsonObj.put("session_id", session.getId());
+        jsonObj.put("msg_data", "session_id");
+        jsonObj.put("id", session.getId());
         
         session.sendMessage(new TextMessage(jsonObj.toString()));
     }
@@ -52,6 +52,7 @@ public class WebSocketHttpHandler extends TextWebSocketHandler {
     	String payload = message.getPayload();
     	String payloadSplit[] = payload.split(",");
     	String sessionID = session.getId();
+    	JSONObject jsonObj = new JSONObject();
     	
     	logger.info("[message handled] / session_id: " + sessionID + ", payload_message: " + payloadSplit[0]); 
     	
@@ -74,8 +75,8 @@ public class WebSocketHttpHandler extends TextWebSocketHandler {
     		}
     	} else if (payloadSplit[0].equals("GET_SESSION_ID")){
     		jsonObj.put("msg_type", "text");
-            jsonObj.put("msg_data", "send_session_id");
-            jsonObj.put("session_id", session.getId());
+            jsonObj.put("msg_data", "session_id");
+            jsonObj.put("id", session.getId());
             
             session.sendMessage(new TextMessage(jsonObj.toString()));
             
@@ -103,14 +104,19 @@ public class WebSocketHttpHandler extends TextWebSocketHandler {
         }
         
         WebSocketSession singleSession = sessions.get(debuggerVo.getSessionId());
-        
+    	JSONObject jsonObj = new JSONObject();
+    	
         try {    	
         	
 	        if(singleSession != null) {
 	        	lockKeyMap.put(debuggerVo.getSessionId(), debuggerVo.getLockKey());
-	            String message = debuggerVo.getExtraId();
+	            String extraId = debuggerVo.getExtraId();
+	    		jsonObj.put("msg_type", "json");
+	            jsonObj.put("msg_data", "extra_id");
+	            jsonObj.put("id", extraId);
 	            
-	            singleSession.sendMessage(new TextMessage(message));
+	            logger.info("======testtest=======" + jsonObj.toString());
+	            singleSession.sendMessage(new TextMessage(jsonObj.toString()));
 	
 	        } else {
 	        	logger.info("[send_message_to_session failed] / session_id: " + debuggerVo.getSessionId() + ", message: single_session is null");
