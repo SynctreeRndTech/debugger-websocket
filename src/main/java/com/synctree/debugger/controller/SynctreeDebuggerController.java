@@ -7,9 +7,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.synctree.debugger.vo.DebuggerVo;
-import logger.DebuggerLogger;
+
 import lombok.RequiredArgsConstructor;
 import com.synctree.debugger.handler.WebSocketHttpHandler;
+import com.synctree.debugger.logger.DebuggerLogger;
 import com.synctree.debugger.util.redis.RedisUtil;
 
 @RestController

@@ -9,7 +9,7 @@ import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 import org.springframework.stereotype.Component;
 
-import logger.DebuggerLogger;
+import com.synctree.debugger.logger.DebuggerLogger;
 
 @Component
 @ServerEndpoint("/api/websock")

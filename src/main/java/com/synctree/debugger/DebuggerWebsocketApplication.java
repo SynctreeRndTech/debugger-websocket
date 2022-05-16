@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 
-import logger.DebuggerLogger;
+import com.synctree.debugger.logger.DebuggerLogger;
 
 @SpringBootApplication
 public class DebuggerWebsocketApplication {

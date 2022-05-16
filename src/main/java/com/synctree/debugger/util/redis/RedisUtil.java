@@ -3,7 +3,9 @@ package com.synctree.debugger.util.redis;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
-import logger.DebuggerLogger;
+
+import com.synctree.debugger.logger.DebuggerLogger;
+
 import lombok.RequiredArgsConstructor;
 
 @Component
