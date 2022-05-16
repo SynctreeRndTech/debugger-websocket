@@ -1,0 +1,51 @@
+2022-04-11 15:47:43  INFO [org.springframework.boot.StartupInfoLogger] - Starting DebuggerWebsocketApplication using Java 16.0.2 on DESKTOP-4HH6JA9 with PID 5164 (C:\Projects\debugger-websock\target\classes started by User in C:\Projects\debugger-websock)
+2022-04-11 15:47:43  INFO [org.springframework.boot.SpringApplication] - No active profile set, falling back to default profiles: default
+2022-04-11 15:47:43  INFO [org.springframework.boot.logging.DeferredLog] - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2022-04-11 15:47:43  INFO [org.springframework.boot.logging.DeferredLog] - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2022-04-11 15:47:43  INFO [org.springframework.data.repository.config.RepositoryConfigurationDelegate] - Multiple Spring Data modules found, entering strict repository configuration mode!
+2022-04-11 15:47:43  INFO [org.springframework.data.repository.config.RepositoryConfigurationDelegate] - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2022-04-11 15:47:43  INFO [org.springframework.data.repository.config.RepositoryConfigurationDelegate] - Finished Spring Data repository scanning in 5 ms. Found 0 Redis repository interfaces.
+2022-04-11 15:47:43  INFO [org.springframework.data.repository.config.RepositoryConfigurationDelegate] - Multiple Spring Data modules found, entering strict repository configuration mode!
+2022-04-11 15:47:43  INFO [org.springframework.data.repository.config.RepositoryConfigurationDelegate] - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2022-04-11 15:47:43  INFO [org.springframework.data.repository.config.RepositoryConfigurationDelegate] - Finished Spring Data repository scanning in 3 ms. Found 0 Redis repository interfaces.
+2022-04-11 15:47:44  INFO [org.springframework.boot.web.embedded.tomcat.TomcatWebServer] - Tomcat initialized with port(s): 8070 (http)
+2022-04-11 15:47:44  INFO [org.apache.juli.logging.DirectJDKLog] - Initializing ProtocolHandler ["http-nio-8070"]
+2022-04-11 15:47:44  INFO [org.apache.juli.logging.DirectJDKLog] - Starting service [Tomcat]
+2022-04-11 15:47:44  INFO [org.apache.juli.logging.DirectJDKLog] - Starting Servlet engine: [Apache Tomcat/9.0.56]
+2022-04-11 15:47:44  INFO [org.apache.juli.logging.DirectJDKLog] - Initializing Spring embedded WebApplicationContext
+2022-04-11 15:47:44  INFO [org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext] - Root WebApplicationContext: initialization completed in 1014 ms
+2022-04-11 15:47:44  INFO [org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor] - Autowired annotation is not supported on static fields: private static org.springframework.data.redis.core.StringRedisTemplate com.synctree.debugger.controller.SynctreeDebuggerController.stringRedisTemplate
+2022-04-11 15:47:44  INFO [org.springframework.boot.devtools.autoconfigure.OptionalLiveReloadServer] - LiveReload server is running on port 35729
+2022-04-11 15:47:44  INFO [org.apache.juli.logging.DirectJDKLog] - Starting ProtocolHandler ["http-nio-8070"]
+2022-04-11 15:47:44  INFO [org.springframework.boot.web.embedded.tomcat.TomcatWebServer] - Tomcat started on port(s): 8070 (http) with context path ''
+2022-04-11 15:47:44  INFO [org.springframework.boot.StartupInfoLogger] - Started DebuggerWebsocketApplication in 1.903 seconds (JVM running for 2.649)
+2022-04-11 15:47:44  INFO [com.synctree.debugger.util.logging.DebuggerLogger] - ================== DebuggerWebsocketApplication Started >>>>>>>>>>>>>>>>>>
+2022-04-11 15:48:25  INFO [org.apache.juli.logging.DirectJDKLog] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-04-11 15:48:25  INFO [org.springframework.web.servlet.FrameworkServlet] - Initializing Servlet 'dispatcherServlet'
+2022-04-11 15:48:25  INFO [org.springframework.web.servlet.FrameworkServlet] - Completed initialization in 1 ms
+2022-04-11 15:48:25  INFO [com.synctree.debugger.util.logging.DebuggerLogger] - ::: [Currently Connected Session List] ::: [k3vcuok1]
+2022-04-11 15:48:25  INFO [com.synctree.debugger.util.logging.DebuggerLogger] - ::: [Client Connected] ::: /[0:0:0:0:0:0:0:1]:54212
+2022-04-11 15:48:25  INFO [com.synctree.debugger.util.logging.DebuggerLogger] - ::: [Client SessionID] ::: k3vcuok1
+2022-04-11 15:48:25  INFO [com.synctree.debugger.util.logging.DebuggerLogger] - ::: [Client HandshakeHeaders] ::: [host:"localhost:8070", connection:"Upgrade", pragma:"no-cache", cache-control:"no-cache", user-agent:"Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Mobile Safari/537.36", upgrade:"websocket", origin:"http://localhost", sec-websocket-version:"13", accept-encoding:"gzip, deflate, br", accept-language:"ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7", cookie:"_ga=GA1.1.1989628508.1647507356; _gid=GA1.1.758931984.1649644602; PHPSESSID=n9pp1pih70h7537ta01cgbgc8o; _gat_gtag_UA_171118872_1=1", sec-websocket-key:"IHB/m4ogZwTXhjYV6/D9RQ==", sec-websocket-extensions:"permessage-deflate; client_max_window_bits"]
+2022-04-11 15:48:48  INFO [com.synctree.debugger.util.logging.DebuggerLogger] - ::: SpinkLockKey ::: dbg23284ec0bfab027748113ba8c7c93b93
+2022-04-11 15:48:48  INFO [com.synctree.debugger.util.logging.DebuggerLogger] - ::: ExtraID ::: 6FGd)JJ^=lRN=Up7bKG^
+2022-04-11 15:48:48  INFO [com.synctree.debugger.util.logging.DebuggerLogger] - ::: SessionID ::: k3vcuok1
+2022-04-11 15:48:48  INFO [com.synctree.debugger.util.logging.DebuggerLogger] - Redis Set : key 'dbg23284ec0bfab027748113ba8c7c93b93', value : 1
+2022-04-11 15:48:50  INFO [com.synctree.debugger.util.logging.DebuggerLogger] - [Client Message Handled] ::: /[0:0:0:0:0:0:0:1]:54212, request_for_unlock,k3vcuok1
+2022-04-11 15:48:50  INFO [com.synctree.debugger.util.logging.DebuggerLogger] - ::: SpinkLockKey ::: dbg23284ec0bfab027748113ba8c7c93b93
+2022-04-11 15:48:50  INFO [com.synctree.debugger.util.logging.DebuggerLogger] - ::: ExtraID ::: OCF|`P(0r6H0UK0dSkS@
+2022-04-11 15:48:50  INFO [com.synctree.debugger.util.logging.DebuggerLogger] - ::: SessionID ::: k3vcuok1
+2022-04-11 15:48:50  INFO [com.synctree.debugger.util.logging.DebuggerLogger] - Redis Set : key 'dbg23284ec0bfab027748113ba8c7c93b93', value : 1
+2022-04-11 15:48:51  INFO [com.synctree.debugger.util.logging.DebuggerLogger] - [Client Message Handled] ::: /[0:0:0:0:0:0:0:1]:54212, request_for_unlock,k3vcuok1
+2022-04-11 15:48:52  INFO [com.synctree.debugger.util.logging.DebuggerLogger] - ::: SpinkLockKey ::: dbg23284ec0bfab027748113ba8c7c93b93
+2022-04-11 15:48:52  INFO [com.synctree.debugger.util.logging.DebuggerLogger] - ::: ExtraID ::: vYr}S|0P6g4:kGe$Q;:X
+2022-04-11 15:48:52  INFO [com.synctree.debugger.util.logging.DebuggerLogger] - ::: SessionID ::: k3vcuok1
+2022-04-11 15:48:52  INFO [com.synctree.debugger.util.logging.DebuggerLogger] - Redis Set : key 'dbg23284ec0bfab027748113ba8c7c93b93', value : 1
+2022-04-11 15:48:53  INFO [com.synctree.debugger.util.logging.DebuggerLogger] - [Client Message Handled] ::: /[0:0:0:0:0:0:0:1]:54212, request_for_unlock,k3vcuok1
+2022-04-11 15:48:54  INFO [com.synctree.debugger.util.logging.DebuggerLogger] - ::: SpinkLockKey ::: dbg23284ec0bfab027748113ba8c7c93b93
+2022-04-11 15:48:54  INFO [com.synctree.debugger.util.logging.DebuggerLogger] - ::: ExtraID ::: ~BGG!HIz4+x6f`.v#Lo%
+2022-04-11 15:48:54  INFO [com.synctree.debugger.util.logging.DebuggerLogger] - ::: SessionID ::: k3vcuok1
+2022-04-11 15:48:54  INFO [com.synctree.debugger.util.logging.DebuggerLogger] - Redis Set : key 'dbg23284ec0bfab027748113ba8c7c93b93', value : 1
+2022-04-11 15:48:55  INFO [com.synctree.debugger.util.logging.DebuggerLogger] - [Client Message Handled] ::: /[0:0:0:0:0:0:0:1]:54212, request_for_unlock,k3vcuok1
+2022-04-11 18:52:03  INFO [com.synctree.debugger.util.logging.DebuggerLogger] - ::: [Client ::: /[0:0:0:0:0:0:0:1]:54212, SessionID ::: k3vcuok1 ::: Disconnected]
+2022-04-11 18:52:10  INFO [org.springframework.boot.admin.SpringApplicationAdminMXBeanRegistrar$SpringApplicationAdmin] - Application shutdown requested.

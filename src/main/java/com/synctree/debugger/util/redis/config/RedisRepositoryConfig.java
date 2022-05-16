@@ -1,4 +1,4 @@
-package com.synctree.debugger.config;
+package com.synctree.debugger.util.redis.config;
 
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.context.annotation.Bean;
