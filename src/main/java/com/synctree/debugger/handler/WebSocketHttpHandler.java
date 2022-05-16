@@ -115,7 +115,6 @@ public class WebSocketHttpHandler extends TextWebSocketHandler {
 	            jsonObj.put("msg_data", "extra_id");
 	            jsonObj.put("id", extraId);
 	            
-	            logger.info("======testtest=======" + jsonObj.toString());
 	            singleSession.sendMessage(new TextMessage(jsonObj.toString()));
 	
 	        } else {
