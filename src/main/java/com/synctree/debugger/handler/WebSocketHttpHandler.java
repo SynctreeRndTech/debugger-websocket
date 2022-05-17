@@ -80,6 +80,8 @@ public class WebSocketHttpHandler extends TextWebSocketHandler {
             
             session.sendMessage(new TextMessage(jsonObj.toString()));
             
+    	} else if(payloadSplit[0].equals("request_for_close")){
+    		session.close();
     	} else {
     		jsonObj.put("msg_type", "text");
             jsonObj.put("msg_data", "echo_message");

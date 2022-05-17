@@ -24,22 +24,6 @@
 		</rollingPolicy>
 	</appender>
 
-	<logger name="com.synctree" level="debug" additivity="false">
-		<appender-ref ref="CONSOLE" />
-	</logger>
-	
-	<logger name="org.springframework.orm.jpa" level="debug" additivity="false">
-		<appender-ref ref="CONSOLE" />
-	</logger>
-	
-	<logger name="org.springframework.transaction" level="debug" additivity="false">
-		<appender-ref ref="CONSOLE" />
-	</logger>
-	
-	<logger name="org.springframework.jdbc" level="debug" additivity="false">
-		<appender-ref ref="CONSOLE" />
-	</logger>
-	
 	<root level="INFO">
 		<appender-ref ref="FILE" />
 		<appender-ref ref="CONSOLE" />
