@@ -24,7 +24,7 @@ public class WebSocketHttpHandler extends TextWebSocketHandler {
 	private static final DebuggerLogger logger = new DebuggerLogger(WebSocketHttpHandler.class.getName());
 	
 	//private static Set<WebSocketSession> sessions = new ConcurrentHashMap().newKeySet();
-	private static HashMap<String, WebSocketSession> sessions = new HashMap<String, WebSocketSession>();
+	private HashMap<String, WebSocketSession> sessions = new HashMap<String, WebSocketSession>();
 	private HashMap<String, String> lockKeyMap = new HashMap<String, String>();
 	private HashMap<String, Object> hashmap = new HashMap<>();
 	//private final StringRedisTemplate stringRedisTemplate;
@@ -38,7 +38,7 @@ public class WebSocketHttpHandler extends TextWebSocketHandler {
         //logger.info("::: connected client ::: "+ session.getRemoteAddress().toString());
         //logger.info("::: handshake headers ::: "+ session.getHandshakeHeaders().toString());
         
-    	hashmap.put("msg_type", "text");
+    	hashmap.put("msg_type", "json");
     	hashmap.put("msg_data", "session_id");
     	hashmap.put("id", session.getId());
         
@@ -58,23 +58,26 @@ public class WebSocketHttpHandler extends TextWebSocketHandler {
     	
     	if(payloadSplit[0].equals("request_for_unlock")){
         	String lockKey = lockKeyMap.get(sessionID);
-        	hashmap.put("msg_type", "text");
+        	hashmap.put("msg_type", "json");
         	hashmap.put("msg_data", "unlock_result");
     		if (lockKey != null ) {
-        		boolean result = redisUtil.setRedisStringValue(lockKey, "0"); //Release spin lock (unlock:"0", lock:"1")
+        		boolean result = redisUtil.setRedisHashValue(lockKeyMap.get(sessionID), "spinlock_check", "0"); //스핀락 해제 (unlock:"0", lock:"1")
         		if(result == true ) {
-        			hashmap.put("result_msg", "Spinlock released");
+        			hashmap.put("rst_cd", "S0001");
+        			hashmap.put("msg", "Spin-lock released");
         		} else {
-        			hashmap.put("result_msg", "Release spinlock failed");
+        			hashmap.put("rst_cd", "E0005");
+        			hashmap.put("msg", "Release spin-lock failed");
         		}
         		jsonObj.putAll(hashmap);
                 session.sendMessage(new TextMessage(jsonObj.toString()));
     		} else {
                 logger.info("[message handled] / session_id '" + sessionID + "''s lock_key is null");
-                hashmap.put("result_msg", "LockKey is null" );
+                hashmap.put("rst_cd", "E0002");
+                hashmap.put("msg", "Lock-key is null" );
     			session.sendMessage(new TextMessage(jsonObj.toString()));
     		}
-    	} else if (payloadSplit[0].equals("GET_SESSION_ID")){
+    	} else if (payloadSplit[0].equals("get_session_id")){
     		hashmap.put("msg_type", "text");
     		hashmap.put("msg_data", "session_id");
     		hashmap.put("id", session.getId());
@@ -82,8 +85,22 @@ public class WebSocketHttpHandler extends TextWebSocketHandler {
     		jsonObj.putAll(hashmap);
             session.sendMessage(new TextMessage(jsonObj.toString()));
             
-    	} else if(payloadSplit[0].equals("request_for_close")){
-    		session.close();
+    	} else if(payloadSplit[0].equals("request_for_close")){ //session_close 요청 처리
+    		if (lockKeyMap.get(sessionID) != null) {
+    			boolean result = redisUtil.setRedisHashValue(lockKeyMap.get(sessionID), "continue_check", "0"); //디버깅 continue 상태값 멈춤으로 변경(stop:"0", continue:"1")
+    			session.close();
+    			
+    		} else { //session_close 요청 처리 failed
+	        	hashmap.put("msg_type", "json");
+	        	hashmap.put("msg_data", "error_msg");
+	        	hashmap.put("rst_cd", "E0003");
+	        	hashmap.put("msg", "Closing session failed, lock-key is null");
+	            
+	        	logger.error("[message handled] / session_id '" + sessionID + "''s lock_key is null, failed to change 'continue_check'. failed to close session");
+	        	
+	        	jsonObj.putAll(hashmap);
+	        	session.sendMessage(new TextMessage(jsonObj.toString()));
+    		}
     	} else {
     		hashmap.put("msg_type", "text");
     		hashmap.put("msg_data", "echo_message");
@@ -99,6 +116,12 @@ public class WebSocketHttpHandler extends TextWebSocketHandler {
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         super.afterConnectionClosed(session, status);
         logger.info("[client '"+ session.getId() + "' session closed]");
+        if(lockKeyMap.get(session.getId()) != null) {
+        	Object value = redisUtil.getRedisHashValue(lockKeyMap.get(session.getId()), "continue_check");
+        	if (value != null) {
+        		redisUtil.setRedisHashValue(lockKeyMap.get(session.getId()), "continue_check", "0"); //디버깅 continue 상태값 멈춤으로 변경(stop:"0", continue:"1")
+        	}
+        }
         sessions.remove(session.getId());
     }
     
@@ -135,16 +158,21 @@ public class WebSocketHttpHandler extends TextWebSocketHandler {
 			        	lockKeyMap.put(debuggerVo.getSessionId(), debuggerVo.getLockKey());
 			        	hashmap.put("msg_type", "json");
 			        	hashmap.put("msg_data", "error_msg");
-			        	hashmap.put("msg", "ExtraId is null");
+			        	hashmap.put("rst_cd", "E0004");
+			        	hashmap.put("msg", "Extra-ID is null");
 			            
+			        	logger.info("[send_message_to_session failed] / session_id: " + debuggerVo.getSessionId() + ", message: extra_id is null");
+			        	
 			        	jsonObj.putAll(hashmap);
 			            singleSession.sendMessage(new TextMessage(jsonObj.toString()));
-			            
-	        			logger.info("[send_message_to_session failed] / session_id: " + debuggerVo.getSessionId() + ", message: extra_id is null");
+			           
 	        			return "ExtraId is null";
 	        		}
 	        	} else {
 		        	logger.info("[send_message_to_session failed] / session_id: " + debuggerVo.getSessionId() + ", message: lock_key is null");
+		        	hashmap.put("rst_cd", "E0002");
+		            hashmap.put("msg", "Lock-key is null" );
+		            singleSession.sendMessage(new TextMessage(jsonObj.toString()));
 		        	return "LockKey is null";
 	        	}
 	        } else {

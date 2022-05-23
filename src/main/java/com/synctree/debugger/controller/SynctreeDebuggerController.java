@@ -31,7 +31,7 @@ public class SynctreeDebuggerController {
 		
 		if(debuggerVo.getLockKey() != null && debuggerVo.getExtraId() != null && debuggerVo.getSessionId() != null) {
 			try {
-				boolean lockResult = redisUtil.setRedisStringValue(debuggerVo.getLockKey(), "1"); //Lock spin lock (unlock:"0", lock:"1")
+				boolean lockResult = redisUtil.setRedisHashValue(debuggerVo.getLockKey(), "spinlock_check", "1"); //Lock spin lock (lock:"1", unlock:"0")
 				if (lockResult == true) {
 					String resultMsg = websock.sendMessageToSession(debuggerVo);
 					if (resultMsg != null) {
@@ -45,7 +45,7 @@ public class SynctreeDebuggerController {
 					}
 				} else {
 					hashmap.put("result", false);
-					hashmap.put("result_code", "E0002");
+					hashmap.put("result_code", "E0006");
 					hashmap.put("result_msg", "Lock failed");
 				}
 			} catch (NullPointerException e) {
