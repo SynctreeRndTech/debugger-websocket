@@ -46,17 +46,12 @@ public class RedisUtil {
 
 		if(stringValueOperations.get(key).equals(value)) {
 			
-			if(value == "0") {
-				logger.info("[spin_lock_status_changed] / unlocked");
-			} else if (value == "1"){
-				logger.info("[spin_lock_status_changed] / locked");
-			} else {
-				logger.info("[spin_lock_status_changed] / " + value);
-			}
+			logger.info("["+key+"_status_changed] / " + value);
 			
 			return true;
 		}
-		logger.info("[spin_lock_changing_status_failed]");
+		
+		logger.info("["+key+"_changing_status_failed]");
 		return false;
 	}
 
@@ -64,16 +59,11 @@ public class RedisUtil {
 		hashValueOperations.put(key, field, value);
 	   
 		if(hashValueOperations.get(key, field).equals(value)) {
-			if(value == "0") {
-				logger.info("[spin_lock_status_changed] / unlocked");
-			} else if (value == "1"){
-				logger.info("[spin_lock_status_changed] / locked");
-			} else {
-				logger.info("[spin_lock_status_changed] / " + value);
-			}
+			logger.info("["+field+":"+key+"_status_changed] / " + value);
 			return true;
 		}
-		logger.info("[spin_lock_changing_status_failed]"); //jianna
+		
+		logger.info("["+field+":"+key+"_changing_status_failed]"); //jianna
 		return false;
 	}
 }
