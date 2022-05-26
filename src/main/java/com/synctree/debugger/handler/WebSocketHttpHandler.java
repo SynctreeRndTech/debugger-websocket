@@ -116,12 +116,6 @@ public class WebSocketHttpHandler extends TextWebSocketHandler {
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         super.afterConnectionClosed(session, status);
         logger.info("[client '"+ session.getId() + "' session closed]");
-        if(lockKeyMap.get(session.getId()) != null) {
-        	Object value = redisUtil.getRedisHashValue(lockKeyMap.get(session.getId()), "continue_check");
-        	if (value != null) {
-        		redisUtil.setRedisHashValue(lockKeyMap.get(session.getId()), "continue_check", "0"); //디버깅 continue 상태값 멈춤으로 변경(stop:"0", continue:"1")
-        	}
-        }
         sessions.remove(session.getId());
     }
     
